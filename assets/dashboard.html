@@ -1,0 +1,316 @@
+
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Dashboard — BIRTH</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0b1b2b;--panel:#0e2136;--panel2:#102b48;--text:#eef3f7;--muted:#bcd0df;--brand:#0e6ba8;--brand2:#6ed3ff;--accent:#ff8a00;--line:rgba(255,255,255,.1)}
+    *{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
+    .layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+    .side{background:linear-gradient(160deg,#0e2034,#0a1829);border-right:1px solid var(--line);padding:18px;position:sticky;top:0;height:100vh}
+    .logo{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+    .logo img{height:34px;border-radius:8px}
+    .menu a{display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:10px;color:var(--text);opacity:.9;margin:4px 0;text-decoration:none;cursor:pointer}
+    .menu a:hover, .menu a.active{background:#0f2740}
+    .logout{margin-top:10px;color:#ffb7b7}
+    .top{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line);background:#0f2740;position:sticky;top:0;z-index:5}
+    .btn{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#001421;font-weight:700;border:none;border-radius:10px;padding:10px 14px;cursor:pointer}
+    .content{padding:18px}
+    h1{margin:.2em 0 .6em 0}
+    table{width:100%;border-collapse:collapse;background:#0f2740;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+    th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;color:#e5eef6}
+    th{background:#113254} tr:hover{background:#0f2b47}
+    .toolbar{display:flex;gap:10px;align-items:center;margin:10px 0 14px 0}
+    input,select,textarea{background:#0d2237;color:var(--text);border:1px solid var(--line);border-radius:8px;padding:8px}
+    dialog{border:none;border-radius:12px;background:#0f2740;color:var(--text);padding:16px;max-width:760px;width:92vw} dialog::backdrop{background:rgba(0,0,0,.6)}
+    .langbtn{background:#0d2237;border:1px solid var(--line);color:#eef3f7;padding:6px 10px;border-radius:10px;cursor:pointer}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px} .card{background:#0f2740;border:1px solid var(--line);border-radius:12px;padding:16px}
+    @media(max-width:900px){.cards{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <script>if(sessionStorage.getItem('auth')!=='ok'){location.replace('login.html');}</script>
+  <div class="layout">
+    <aside class="side">
+      <div class="logo"><img src="assets/logo.png" alt="logo"><strong>BIRTH</strong></div>
+      <nav class="menu">
+        <a class="active" data-view="projects" data-i18n="dash.menu.projects">📁 Projektet</a>
+        <a data-view="analytics" data-i18n="dash.menu.analytics">📊 Analiza & Raporte</a>
+        <a data-view="freelancers" data-i18n="dash.menu.freelancers">👥 Freelancerët</a>
+        <a data-view="settings" data-i18n="dash.menu.settings">⚙️ Cilësimet</a>
+        <a href="#" class="logout" id="logout" data-i18n="dash.menu.logout">🚪 Dil</a>
+      </nav>
+    </aside>
+    <main>
+      <div class="top">
+        <div style="display:flex;align-items:center;gap:10px">
+          <h3 id="topTitle" data-i18n="dash.top.projects">Menaxhimi i projekteve</h3>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="langbtn" id="langBtn" onclick="setLang((window.currentLang||defaultLang)==='sq'?'en':'sq')">🇦🇱</button>
+          <button class="btn" id="addBtn" data-i18n="dash.actions.add">➕ Shto projekt</button>
+        </div>
+      </div>
+      <div class="content">
+        <!-- Projects View -->
+        <section id="view-projects">
+          <div class="toolbar">
+            <input id="search" data-i18n="dash.filters.search" placeholder="Kërko sipas idesë / personit…">
+            <select id="filterStatus">
+              <option value="" data-i18n="dash.filters.status">Filtri: Statusi</option>
+              <option data-i18n="dash.status.bid">Bid</option>
+              <option data-i18n="dash.status.comms">Komunikim me klientin</option>
+              <option data-i18n="dash.status.approved">Projekti i aprovuar</option>
+              <option data-i18n="dash.status.dev">Në fazë zhvillimi</option>
+              <option data-i18n="dash.status.done">Projekt i përfunduar</option>
+            </select>
+          </div>
+          <table id="tbl">
+            <thead>
+              <tr>
+                <th>ID</th><th data-i18n="dash.cols.idea">Ide</th><th data-i18n="dash.cols.phase">Faza</th><th>Bid</th><th data-i18n="dash.cols.comms">Komunikim</th>
+                <th data-i18n="dash.cols.status">Status</th><th data-i18n="dash.cols.owner">Kujdeset nga</th><th data-i18n="dash.cols.profile">Profili</th>
+                <th data-i18n="dash.cols.collab">Bashkëpunëtorët</th><th data-i18n="dash.cols.notes">Komente</th><th data-i18n="dash.cols.budget">Buxheti</th><th data-i18n="dash.cols.actions">Veprime</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </section>
+
+        <!-- Analytics View -->
+        <section id="view-analytics" style="display:none">
+          <div class="cards">
+            <div class="card"><h4 data-i18n="dash.analytics.kpi1.title">Leads</h4><p data-i18n="dash.analytics.kpi1.desc">Gjurmim javë‑pas‑jave i prospekteve dhe burimeve.</p></div>
+            <div class="card"><h4 data-i18n="dash.analytics.kpi2.title">Konvertime</h4><p data-i18n="dash.analytics.kpi2.desc">Raport konversioni sipas kanaleve dhe fushatave.</p></div>
+            <div class="card"><h4 data-i18n="dash.analytics.kpi3.title">ROI</h4><p data-i18n="dash.analytics.kpi3.desc">Kthimi nga investimi për çdo projekt/kampanjë.</p></div>
+          </div>
+          <p class="muted" data-i18n="dash.analytics.note">*Placeholder analitikash — mund të lidhet me burime reale më vonë.</p>
+        </section>
+
+        <!-- Freelancers View -->
+        <section id="view-freelancers" style="display:none">
+          <table style="width:100%" class="card">
+            <thead><tr><th data-i18n="dash.freelancers.name">Emri</th><th data-i18n="dash.freelancers.skill">Profili</th><th>Email</th></tr></thead>
+            <tbody>
+              <tr><td>Martini</td><td>profil1</td><td>martini@example.com</td></tr>
+              <tr><td>Rexhina</td><td>profil2</td><td>rexhina@example.com</td></tr>
+              <tr><td>Igli</td><td>profil3</td><td>igli@example.com</td></tr>
+              <tr><td>Bruna</td><td>profil4</td><td>bruna@example.com</td></tr>
+              <tr><td>Albora</td><td>profil2</td><td>albora@example.com</td></tr>
+              <tr><td>Endri</td><td>profil3</td><td>endri@example.com</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Settings View -->
+        <section id="view-settings" style="display:none">
+          <div class="card">
+            <h4 data-i18n="dash.settings.lang">Gjuha e ndërfaqes</h4>
+            <button class="langbtn" onclick="setLang('sq')">🇦🇱 Shqip</button>
+            <button class="langbtn" onclick="setLang('en')">🇬🇧 English</button>
+          </div>
+          <div class="card" style="margin-top:12px">
+            <h4 data-i18n="dash.settings.reset">Rivendos të dhënat</h4>
+            <button class="btn" onclick="if(confirm(t('dash.settings.confirmReset'))){ localStorage.removeItem('birth_projects_v1'); location.reload(); }" data-i18n="dash.settings.resetBtn">Fshi projektet demo</button>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <dialog id="dlg">
+    <form id="frm" method="dialog">
+      <h3 id="dlgTitle" data-i18n="dash.dialog.title">Shto / Edito projekt</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <input name="ide" data-i18n="dash.dialog.ide" placeholder="Ide projekti" required>
+        <select name="faza">
+          <option data-i18n="dash.status.bid">Bid</option>
+          <option data-i18n="dash.status.comms">Komunikim me klientin</option>
+          <option data-i18n="dash.status.approved">Projekti i aprovuar</option>
+          <option data-i18n="dash.status.dev">Në fazë zhvillimi</option>
+          <option data-i18n="dash.status.done">Projekt i përfunduar</option>
+        </select>
+        <input name="bid" placeholder="Bid (p.sh. €3,000)">
+        <input name="komunikim" data-i18n="dash.dialog.comms" placeholder="Komunikim (shkurt)">
+        <select name="status">
+          <option data-i18n="dash.status.bid">Bid</option>
+          <option data-i18n="dash.status.comms">Komunikim me klientin</option>
+          <option data-i18n="dash.status.approved">Projekti i aprovuar</option>
+          <option data-i18n="dash.status.dev">Në fazë zhvillimi</option>
+          <option data-i18n="dash.status.done">Projekt i përfunduar</option>
+        </select>
+        <select name="kujdeset">
+          <option>Martini</option><option>Rexhina</option><option>Igli</option><option>Bruna</option><option>Albora</option><option>Endri</option>
+        </select>
+        <select name="profil">
+          <option>profil1</option><option>profil2</option><option>profil3</option><option>profil4</option>
+        </select>
+        <input name="bashke" data-i18n="dash.dialog.collab" placeholder="Bashkëpunëtorët">
+        <input name="buxheti" data-i18n="dash.dialog.budget" placeholder="Buxheti i parashikuar (p.sh. €10,000)">
+      </div>
+      <textarea name="komente" rows="3" style="width:100%;margin-top:10px" data-i18n="dash.dialog.notes" placeholder="Komente"></textarea>
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:10px">
+        <button value="cancel" data-i18n="dash.dialog.cancel">Anulo</button>
+        <button id="saveBtn" value="default" data-i18n="dash.dialog.save">Ruaj</button>
+      </div>
+    </form>
+  </dialog>
+
+<script>
+  const I18N = {
+    sq: {
+      dash: {
+        menu: {projects:'📁 Projektet', analytics:'📊 Analiza & Raporte', freelancers:'👥 Freelancerët', settings:'⚙️ Cilësimet', logout:'🚪 Dil'},
+        top: {projects:'Menaxhimi i projekteve'},
+        actions: {add:'➕ Shto projekt'},
+        filters: {search:'Kërko sipas idesë / personit…', status:'Filtri: Statusi'},
+        status: {bid:'Bid', comms:'Komunikim me klientin', approved:'Projekti i aprovuar', dev:'Në fazë zhvillimi', done:'Projekt i përfunduar'},
+        cols: {idea:'Ide', phase:'Faza', comms:'Komunikim', status:'Status', owner:'Kujdeset nga', profile:'Profili', collab:'Bashkëpunëtorët', notes:'Komente', budget:'Buxheti', actions:'Veprime'},
+        dialog: {title:'Shto / Edito projekt', ide:'Ide projekti', comms:'Komunikim (shkurt)', budget:'Buxheti i parashikuar (p.sh. €10,000)', notes:'Komente', cancel:'Anulo', save:'Ruaj'},
+        analytics: {
+          kpi1: {title:'Leads', desc:'Gjurmim javë‑pas‑jave i prospekteve dhe burimeve.'},
+          kpi2: {title:'Konvertime', desc:'Raport konversioni sipas kanaleve dhe fushatave.'},
+          kpi3: {title:'ROI', desc:'Kthimi nga investimi për çdo projekt/kampanjë.'},
+          note:'*Placeholder analitikash — mund të lidhet me burime reale më vonë.'
+        },
+        freelancers: {name:'Emri', skill:'Profili'},
+        settings: {lang:'Gjuha e ndërfaqes', reset:'Rivendos të dhënat', resetBtn:'Fshi projektet demo', confirmReset:'Të fshihen të dhënat demo?'}
+      }
+    },
+    en: {
+      dash: {
+        menu: {projects:'📁 Projects', analytics:'📊 Analytics & Reports', freelancers:'👥 Freelancers', settings:'⚙️ Settings', logout:'🚪 Logout'},
+        top: {projects:'Project management'},
+        actions: {add:'➕ Add project'},
+        filters: {search:'Search by idea / owner…', status:'Filter: Status'},
+        status: {bid:'Bid', comms:'Client communication', approved:'Project approved', dev:'In development', done:'Project completed'},
+        cols: {idea:'Idea', phase:'Phase', comms:'Comms', status:'Status', owner:'Owner', profile:'Profile', collab:'Collaborators', notes:'Notes', budget:'Budget', actions:'Actions'},
+        dialog: {title:'Add / Edit project', ide:'Project idea', comms:'Comms (short)', budget:'Estimated budget (e.g. €10,000)', notes:'Notes', cancel:'Cancel', save:'Save'},
+        analytics: {
+          kpi1: {title:'Leads', desc:'Week‑over‑week tracking by sources.'},
+          kpi2: {title:'Conversions', desc:'Conversion ratio by channels & campaigns.'},
+          kpi3: {title:'ROI', desc:'Return on investment per project/campaign.'},
+          note:'*Analytics placeholders — can be wired to real sources later.'
+        },
+        freelancers: {name:'Name', skill:'Profile'},
+        settings: {lang:'Interface language', reset:'Reset data', resetBtn:'Delete demo projects', confirmReset:'Delete demo data?'}
+      }
+    }
+  };
+</script>
+
+<script>
+// --- i18n core ---
+const I18N_KEY = 'birth_lang';
+const defaultLang = localStorage.getItem(I18N_KEY) || 'sq';
+function setLang(l){ localStorage.setItem(I18N_KEY,l); applyLang(l); }
+function t(path){
+  const parts = path.split('.');
+  let cur = I18N[window.currentLang || defaultLang];
+  for(const p of parts){ if(cur && p in cur){ cur = cur[p]; } else { return path; } }
+  return cur;
+}
+function applyLang(lang){
+  window.currentLang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    const val = t(key);
+    if(el.tagName==='INPUT' || el.tagName==='TEXTAREA'){
+      el.setAttribute('placeholder', val);
+    } else {
+      el.innerHTML = val;
+    }
+  });
+  const btn = document.getElementById('langBtn');
+  if(btn){ btn.textContent = (lang==='sq' ? '🇦🇱' : '🇬🇧'); }
+}
+document.addEventListener('DOMContentLoaded', ()=>applyLang(defaultLang));
+</script>
+
+<script>
+  const LS_KEY='birth_projects_v1';
+  const $=s=>document.querySelector(s);
+  const $$=s=>Array.from(document.querySelectorAll(s));
+  const state={editIndex:null, data:[]};
+  const tblBody = document.querySelector('#tbl tbody');
+  const dlg = document.querySelector('#dlg'); const frm = document.querySelector('#frm');
+
+  // Sidebar routing
+  const views={projects:'#view-projects', analytics:'#view-analytics', freelancers:'#view-freelancers', settings:'#view-settings'};
+  $$('.menu a[data-view]').forEach(a=>a.addEventListener('click', ()=>{
+    $$('.menu a').forEach(x=>x.classList.remove('active'));
+    a.classList.add('active');
+    const v = a.getAttribute('data-view');
+    Object.values(views).forEach(sel=>$(sel).style.display='none');
+    $(views[v]).style.display='block';
+    $('#topTitle').innerHTML = (v==='projects'? t('dash.top.projects') : a.textContent);
+  }));
+
+  function load(){ try{ state.data = JSON.parse(localStorage.getItem(LS_KEY))||[] }catch(e){ state.data=[] } }
+  function save(){ localStorage.setItem(LS_KEY, JSON.stringify(state.data)) }
+  function row(project, i){
+    const tr=document.createElement('tr');
+    tr.innerHTML = `
+      <td>${i+1}</td>
+      <td>${project.ide||''}</td>
+      <td>${project.faza||''}</td>
+      <td>${project.bid||''}</td>
+      <td>${project.komunikim||''}</td>
+      <td>${project.status||''}</td>
+      <td>${project.kujdeset||''}</td>
+      <td>${project.profil||''}</td>
+      <td>${project.bashke||''}</td>
+      <td>${project.komente||''}</td>
+      <td>${project.buxheti||''}</td>
+      <td>
+        <button data-act="edit" data-i="${i}">✏️</button>
+        <button data-act="del" data-i="${i}">🗑️</button>
+      </td>`;
+    return tr;
+  }
+  function render(){
+    const q = (document.getElementById('search')||{value:''}).value.toLowerCase();
+    const fs = (document.getElementById('filterStatus')||{value:''}).value;
+    tblBody.innerHTML='';
+    state.data
+      .filter(p => (!q || JSON.stringify(p).toLowerCase().includes(q)))
+      .filter(p => (!fs || p.status===fs))
+      .forEach((p,i)=> tblBody.appendChild(row(p,i)));
+  }
+  document.getElementById('addBtn').addEventListener('click', ()=>{ state.editIndex=null; frm.reset(); document.getElementById('dlgTitle').innerHTML=t('dash.dialog.title'); dlg.showModal(); });
+  tblBody.addEventListener('click', (e)=>{
+    const btn = e.target.closest('button'); if(!btn) return;
+    const i = +btn.dataset.i;
+    if(btn.dataset.act==='edit'){
+      state.editIndex=i; const p=state.data[i]; document.getElementById('dlgTitle').innerHTML=t('dash.dialog.title'); dlg.showModal();
+      Object.entries(p).forEach(([k,v])=>{ if(frm.elements[k]) frm.elements[k].value=v; });
+    } else if(btn.dataset.act==='del'){
+      if(confirm(window.currentLang==='en'?'Delete this project?':'Të fshihet projekti?')){ state.data.splice(i,1); save(); render(); }
+    }
+  });
+  frm.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const formData = new FormData(frm);
+    const p = Object.fromEntries(formData.entries());
+    if(state.editIndex==null){ state.data.push(p); } else { state.data[state.editIndex]=p; }
+    save(); dlg.close(); render();
+  });
+  document.getElementById('logout').addEventListener('click', (e)=>{ e.preventDefault(); sessionStorage.removeItem('auth'); location.replace('login.html'); });
+  function seed(){
+    if(state.data.length===0){
+      state.data=[
+        {ide:'Website për klinikë',faza:'Bid',bid:'€4,500',komunikim:'Takim fillestar',status:'Bid',kujdeset:'Martini',profil:'profil1',bashke:'Rexhina',komente:'Kërkojnë SEO',buxheti:'€5,000'},
+        {ide:'App rezervimesh',faza:'Projekti i aprovuar',bid:'€12,000',komunikim:'Email javor',status:'Në fazë zhvillimi',kujdeset:'Igli',profil:'profil3',bashke:'Endri',komente:'Sprint #2',buxheti:'€15,000'}
+      ];
+      save();
+    }
+  }
+  load(); seed(); render();
+  const searchEl=document.getElementById('search'); if(searchEl) searchEl.addEventListener('input', render);
+  const filterEl=document.getElementById('filterStatus'); if(filterEl) filterEl.addEventListener('change', render);
+</script>
+</body>
+</html>

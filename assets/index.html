@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>BIRTH — Business Intelligence & Responsive Thinking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #081b2c; color: #fff; }
+    .filter-btn {
+      padding: 8px 14px;
+      border: 1px solid var(--line, #2b3e56);
+      background: #0d2237;
+      color: var(--text, #fff);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .filter-btn:hover {
+      background: #193a58;
+    }
+    .filter-btn.active {
+      background: #6ed3ff;
+      color: #0b2136;
+      font-weight: 600;
+    }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+    .tile.card h3 { margin-bottom: 8px; }
+  </style>
+</head>
+
+<body>
+<header class="header">
+  <div class="container nav">
+    <div class="logo">
+      <img src="assets/logo.png" alt="BIRTH logo"/>
+      <span>BIRTH</span>
+    </div>
+    <nav class="hide-sm">
+      <a href="#services" data-i18n="nav.services">Services</a>
+      <a href="#why" data-i18n="nav.why">Why BIRTH</a>
+      <a href="#about" data-i18n="nav.about">About</a>
+      <a href="#contact" data-i18n="nav.contact">Contact</a>
+      <a href="login.html" class="cta" data-i18n="nav.platform">Login to Platform</a>
+      <button id="langBtn" title="Switch language" onclick="setLang((window.currentLang||defaultLang)==='en'?'sq':'en')">🇬🇧</button>
+    </nav>
+  </div>
+</header>
+
+<!-- Hero Section -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <span class="badge" data-i18n="hero.badge">Business Intelligence & Responsive Thinking</span>
+      <h1 data-i18n="hero.title">From data to decision — <span style='color:#6ed3ff'>instantly</span>.</h1>
+      <p class="tag" data-i18n="hero.tag">We connect clients with top freelancers in marketing, web/app, design and analytics. Fast delivery, measurable results.</p>
+      <div class="hero-cta">
+        <a href="#services" class="cta" data-i18n="hero.viewServices">View services</a>
+      </div>
+      <div class="kpis">
+        <div class="k"><div class="n">24–72h</div><div class="l" data-i18n="hero.kpi1">project kickoff</div></div>
+        <div class="k"><div class="n">+35%</div><div class="l" data-i18n="hero.kpi2">avg. ROI uplift</div></div>
+        <div class="k"><div class="n">100%</div><div class="l" data-i18n="hero.kpi3">transparency</div></div>
+      </div>
+    </div>
+    <div class="card hero-visual">
+      <svg viewBox="0 0 560 300" width="100%" height="auto" aria-label="Performance chart">
+        <defs><linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#6ed3ff"/><stop offset="100%" stop-color="#0e6ba8"/></linearGradient></defs>
+        <rect x="0" y="0" width="560" height="300" rx="14" fill="#0b2136"/>
+        <g transform="translate(30,240)">
+          <polyline fill="none" stroke="url(#grad)" stroke-width="4" points="0,-40 60,-60 120,-30 180,-90 240,-70 300,-120 360,-90 420,-160 480,-130 520,-200"/>
+          <circle cx="520" cy="-200" r="5" fill="#6ed3ff"/>
+        </g>
+        <g transform="translate(30,40)" fill="#bcd0df" font-size="12"><text x="0" y="12" data-i18n="hero.chartCaption">Traffic, Conversions, ROI</text></g>
+      </svg>
+      <div class="sub" data-i18n="hero.dashboard">Interactive dashboard — a visual snapshot of performance growth.</div>
+    </div>
+  </div>
+</section>
+
+<!-- Services Section -->
+<section id="services">
+  <div class="container">
+    <h2 data-i18n="services.title">Services</h2>
+    <p class="sub" data-i18n="services.subtitle">Outcome-driven solutions delivered by verified freelancers.</p>
+    <div id="categoryFilters" class="filters"></div>
+    <div class="grid-3" id="servicesGrid"></div>
+  </div>
+</section>
+
+<!-- Why BIRTH -->
+<section id="why">
+  <div class="container">
+    <h2 data-i18n="why.title">Why BIRTH</h2>
+    <p class="sub" data-i18n="why.subtitle">We blend business intelligence with fast execution — tech, transparency and outcomes.</p>
+    <div class="grid-3">
+      <div class="tile card"><h3 data-i18n="why.speed.title">⚡ Speed</h3><p data-i18n="why.speed.desc">Kick off in 24–72h with a clear action plan and milestones.</p></div>
+      <div class="tile card"><h3 data-i18n="why.results.title">📈 Measurable Results</h3><p data-i18n="why.results.desc">KPIs, ROI & dashboards — every decision backed by data.</p></div>
+      <div class="tile card"><h3 data-i18n="why.trust.title">🔒 Trust</h3><p data-i18n="why.trust.desc">Clear contracts, transparent communication and secure payments.</p></div>
+      <div class="tile card"><h3 data-i18n="why.expertise.title">🧠 Expertise</h3><p data-i18n="why.expertise.desc">Verified freelancers across marketing, design, web/app and analytics.</p></div>
+      <div class="tile card"><h3 data-i18n="why.tech.title">🛠️ Modern Tech</h3><p data-i18n="why.tech.desc">Contemporary stack (JS, APIs, cloud) & solid engineering practices.</p></div>
+      <div class="tile card"><h3 data-i18n="why.partner.title">🤝 Partnership</h3><p data-i18n="why.partner.desc">One-team mindset with weekly progress reporting.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- About -->
+<section id="about">
+  <div class="container">
+    <h2 data-i18n="about.title">About Us</h2>
+    <p class="sub" data-i18n="about.lead">We bridge data, decisions and the people who make change happen.</p>
+    <div class="grid-3">
+      <div class="tile card"><h3 data-i18n="about.vision.title">Vision</h3><p data-i18n="about.vision.desc">Be the place where ideas come alive — from insight to real-world impact.</p></div>
+      <div class="tile card"><h3 data-i18n="about.mission.title">Mission</h3><p data-i18n="about.mission.desc">Match clients with vetted freelancers and deliver sustainable results.</p></div>
+      <div class="tile card"><h3 data-i18n="about.values.title">Values</h3><p data-i18n="about.values.desc">Transparency • Innovation • Collaboration • Performance</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact" style="padding:80px 0;background:#0b2136;">
+  <div class="container" style="max-width:800px;margin:auto;text-align:center;">
+    <h2 data-i18n="contact.title" style="font-size:2.2em;font-weight:700;margin-bottom:10px;">Contact</h2>
+    <p class="sub" data-i18n="contact.subtitle" style="color:#bcd0df;margin-bottom:40px;">
+      Tell us briefly about your idea — we’ll reply within 24 hours.
+    </p>
+
+    <form id="formi" class="card" style="background:#0d2237;padding:40px;border-radius:16px;text-align:left;">
+      <label for="f_name" data-i18n="contact.name" style="display:block;margin-bottom:6px;font-weight:600;">Full name</label>
+      <input id="f_name" type="text" data-i18n="contact.name" placeholder="Full name" required
+             style="width:100%;padding:12px;border-radius:8px;border:1px solid #2b3e56;background:#081b2c;color:#fff;margin-bottom:20px;">
+
+      <label for="f_email" data-i18n="contact.email" style="display:block;margin-bottom:6px;font-weight:600;">Email</label>
+      <input id="f_email" type="email" data-i18n="contact.email" placeholder="Email" required
+             style="width:100%;padding:12px;border-radius:8px;border:1px solid #2b3e56;background:#081b2c;color:#fff;margin-bottom:20px;">
+
+      <label for="f_msg" data-i18n="contact.desc" style="display:block;margin-bottom:6px;font-weight:600;">Short project description</label>
+      <textarea id="f_msg" rows="5" data-i18n="contact.desc" placeholder="Short project description" required
+                style="width:100%;padding:12px;border-radius:8px;border:1px solid #2b3e56;background:#081b2c;color:#fff;margin-bottom:20px;"></textarea>
+
+      <button type="submit" class="cta" data-i18n="contact.btn" style="padding:14px 28px;font-size:16px;font-weight:600;">Send request</button>
+      <span id="status" style="margin-left:10px;color:#6ed3ff;"></span>
+    </form>
+  </div>
+</section>
+
+
+<footer>
+  <div class="container" style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+    <div>© 2025 BIRTH — Business Intelligence and Responsive Thinking. All rights reserved.</div>
+    <div><a href="login.html" data-i18n="nav.platform">Login to Platform</a></div>
+  </div>
+</footer>
+
+<!-- Smooth scroll + form -->
+<script>
+  document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{
+    const id=a.getAttribute('href');
+    if(id.length>1){e.preventDefault();document.querySelector(id).scrollIntoView({behavior:'smooth'})}
+  }));
+  const f=document.getElementById('formi'), st=document.getElementById('status');
+  f.addEventListener('submit',e=>{
+    e.preventDefault();
+    st.textContent=(window.currentLang==='sq'?'Duke dërguar…':'Sending…');
+    setTimeout(()=>{st.textContent=(window.currentLang==='sq'?'Faleminderit! Do ju kontaktojmë brenda 24 orëve.':'Thank you! We will contact you within 24 hours.');f.reset();},900);
+  });
+</script>
+
+<!-- Supabase -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = "https://lorhzjmcismjqpmbulkl.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxvcmh6am1jaXNtanFwbWJ1bGtsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA5MjEyNzksImV4cCI6MjA3NjQ5NzI3OX0.rGP_xMsAbzIfO7cXdRLHeKEU_ioSE7VpmhQTWVwKilY";
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  let allServices = [];
+  let selectedCategory = '';
+
+  async function loadServices(lang) {
+    const grid = document.getElementById("servicesGrid");
+    const filters = document.getElementById("categoryFilters");
+    grid.innerHTML = "<p>Loading...</p>";
+    filters.innerHTML = "";
+
+    const { data, error } = await supabase
+      .from('services')
+      .select('*')
+      .eq('lang', lang)
+      .order('order_index', { ascending: true });
+
+    if (error) {
+      grid.innerHTML = "<p>Error loading services.</p>";
+      console.error(error);
+      return;
+    }
+
+    allServices = data;
+    const categories = [...new Set(data.map(s => s.category))];
+
+    filters.innerHTML = categories.map((cat, i) => `
+      <button class="filter-btn ${i===0?'active':''}" data-cat="${cat}">
+        ${getCategoryIcon(cat)} ${cat}
+      </button>
+    `).join('');
+
+    selectedCategory = categories[0];
+    renderServices();
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedCategory = btn.getAttribute('data-cat');
+        renderServices();
+      });
+    });
+  }
+
+  function renderServices() {
+    const grid = document.getElementById("servicesGrid");
+    const filtered = allServices.filter(s => s.category === selectedCategory);
+    if (filtered.length === 0) {
+      grid.innerHTML = "<p>No services found.</p>";
+      return;
+    }
+    grid.innerHTML = filtered.map(s => `
+      <div class="tile card"><h3>${s.title}</h3><p>${s.description}</p></div>
+    `).join('');
+  }
+
+function getCategoryIcon(cat) {
+  const icons = {
+    // MARKETING & FINANCE
+    "Marketing": "📣",
+    "Marketingu": "📣",
+    "Finance": "💰",
+    "Financë": "💰",
+
+    // DATA & ANALYTICS
+    "Data": "📊",
+    "Të dhëna": "📊",
+    "Analytics": "📈",
+    "Analitikë": "📈",
+
+    // WEB & DESIGN
+    "Web Design": "🎨",
+    "Dizenjim Web": "🎨",
+    "Web Apps": "🖥️",
+    "Aplikacione Web": "🖥️",
+    "Mobile Apps": "📱",
+    "Aplikacione Mobile": "📱",
+    "Graphic Design": "🎨",
+    "Dizajn Grafik": "🎨",
+
+    // HR & SAFETY
+    "Human Resources": "👥",
+    "Burime Njerëzore": "👥",
+    "Health & Safety": "🩺",
+    "Siguria & Shëndeti": "🩺",
+
+    // ENGINEERING & SCIENCE
+    "Engineering": "⚙️",
+    "Inxhinieri": "⚙️",
+    "Mathematics": "🧮",
+    "Matematikë": "🧮",
+    "IT": "💻",
+    "Programim": "💻",
+    "Programming": "💻"
+  };
+
+  return icons[cat.trim()] || "💼";
+}
+
+</script>
+
+<!-- i18n -->
+<script>
+  const I18N = {
+    en: {
+      nav:{services:'Services',why:'Why BIRTH',about:'About',contact:'Contact',platform:'Login to Platform'},
+      hero:{badge:'Business Intelligence & Responsive Thinking',title:"From data to decision — <span style='color:#6ed3ff'>instantly</span>.",tag:'We connect clients with top freelancers in marketing, web/app, design and analytics. Fast delivery, measurable results.',viewServices:'View services',kpi1:'project kickoff',kpi2:'avg. ROI uplift',kpi3:'transparency',chartCaption:'Traffic, Conversions, ROI',dashboard:'Interactive dashboard — a visual snapshot of performance growth.'},
+      services:{title:'Services',subtitle:'Outcome-driven solutions delivered by verified freelancers.'},
+      why:{title:'Why BIRTH',subtitle:'We blend business intelligence with fast execution — tech, transparency and outcomes.',speed:{title:'⚡ Speed',desc:'Kick off in 24–72h with a clear action plan and milestones.'},results:{title:'📈 Measurable Results',desc:'KPIs, ROI & dashboards — every decision backed by data.'},trust:{title:'🔒 Trust',desc:'Clear contracts, transparent communication and secure payments.'},expertise:{title:'🧠 Expertise',desc:'Verified freelancers across marketing, design, web/app and analytics.'},tech:{title:'🛠️ Modern Tech',desc:'Contemporary stack (JS, APIs, cloud) & solid engineering practices.'},partner:{title:'🤝 Partnership',desc:'One-team mindset with weekly progress reporting.'}},
+      about:{title:'About Us',lead:'We bridge data, decisions and the people who make change happen.',vision:{title:'Vision',desc:'Be the place where ideas come alive — from insight to real-world impact.'},mission:{title:'Mission',desc:'Match clients with vetted freelancers and deliver sustainable results.'},values:{title:'Values',desc:'Transparency • Innovation • Collaboration • Performance'}},
+      contact:{title:'Contact',subtitle:'Tell us briefly about your idea — we’ll reply within 24 hours.',name:'Full name',email:'Email',desc:'Short project description',btn:'Send request'}
+    },
+    sq: {
+      nav:{services:'Shërbime',why:'Pse BIRTH',about:'Rreth nesh',contact:'Kontakto',platform:'Hyr në Platformë'},
+      hero:{badge:'Business Intelligence & Responsive Thinking',title:"Nga të dhënat te vendimmarrja — <span style='color:#6ed3ff'>menjëherë</span>.",tag:'Lidhim klientët me profesionistë freelancerë për marketing, web/app, dizajn dhe analitikë. Zgjidhje të shpejta, rezultate të matshme.',viewServices:'Shiko shërbimet',kpi1:'fillim projekti',kpi2:'rritje mes. ROI',kpi3:'transparencë',chartCaption:'Trafik, Konvertime, ROI',dashboard:'Dashbord interaktiv — shembull vizual i rritjes së performancës.'},
+      services:{title:'Shërbimet',subtitle:'Zgjidhje të fokusuara tek rezultati, të dorëzuara nga profesionistë freelancerë.'},
+  why:{
+        title:'Pse BIRTH',
+        subtitle:'Kombinojmë inteligjencën e biznesit me zbatimin e shpejtë — teknologji, transparencë dhe rezultate.',
+        speed:{title:'⚡ Shpejtësi',desc:'Nisja e projektit brenda 24–72 orëve me plan të qartë veprimi.'},
+        results:{title:'📈 Rezultate të Matshme',desc:'KPI, ROI dhe dashboard – çdo vendim i mbështetur nga të dhënat.'},
+        trust:{title:'🔒 Besim',desc:'Kontrata të qarta, komunikim transparent dhe pagesa të sigurta.'},
+        expertise:{title:'🧠 Ekspertizë',desc:'Freelancerë të verifikuar në marketing, dizajn, web/app dhe analitikë.'},
+        tech:{title:'🛠️ Teknologji Moderne',desc:'Platforma bashkëkohore (JS, API, cloud) me praktika solide inxhinierike.'},
+        partner:{title:'🤝 Partneritet',desc:'Qasje “one-team” me raportim javor të progresit.'}
+      },
+      about:{
+        title:'Rreth Nesh',
+        lead:'Ne lidhim të dhënat, vendimmarrjen dhe njerëzit që bëjnë ndryshimin.',
+        vision:{title:'Vizioni',desc:'Të jemi vendi ku idetë marrin jetë — nga analiza deri te ndikimi real.'},
+        mission:{title:'Misioni',desc:'Të lidhim klientët me freelancerë të verifikuar dhe të ofrojmë rezultate të qëndrueshme.'},
+        values:{title:'Vlerat',desc:'Transparencë • Inovacion • Bashkëpunim • Performancë'}
+      },
+      contact:{
+        title:'Kontakto',
+        subtitle:'Na trego shkurt idenë – kthehemi brenda 24 orëve.',
+        name:'Emri i plotë',
+        email:'Email',
+        desc:'Përshkrim i shkurtër i projektit',
+        btn:'Dërgo kërkesën'
+      }
+    }
+  };
+
+  const I18N_KEY = 'birth_lang';
+  const defaultLang = localStorage.getItem(I18N_KEY) || 'en';
+
+  function t(path) {
+    const parts = path.split('.');
+    let cur = I18N[window.currentLang || defaultLang];
+    for (const p of parts) {
+      if (cur && p in cur) cur = cur[p];
+      else return path;
+    }
+    return cur;
+  }
+
+  function applyLang(lang) {
+    window.currentLang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      const val = t(key);
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+        el.setAttribute('placeholder', val);
+      } else {
+        el.innerHTML = val;
+      }
+    });
+    const btn = document.getElementById('langBtn');
+    if (btn) btn.textContent = (lang === 'en' ? '🇬🇧' : '🇦🇱');
+  }
+
+  function setLang(l) {
+    localStorage.setItem(I18N_KEY, l);
+    applyLang(l);
+    loadServices(l); // reload services in chosen language
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    applyLang(defaultLang);
+    loadServices(defaultLang);
+  });
+</script>
+
+<script>
+  const form = document.getElementById('formi');
+  const statusEl = document.getElementById('status');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    statusEl.textContent = (window.currentLang === 'sq' ? 'Duke dërguar…' : 'Sending…');
+
+    const name = document.getElementById('f_name').value.trim();
+    const email = document.getElementById('f_email').value.trim();
+    const message = document.getElementById('f_msg').value.trim();
+
+    if (!name || !email || !message) {
+      statusEl.textContent = (window.currentLang === 'sq'
+        ? 'Ju lutem plotësoni të gjitha fushat.'
+        : 'Please fill in all fields.');
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from('contacts')
+      .insert([{ name, email, message }]);
+
+    if (error) {
+      console.error(error);
+      statusEl.textContent = (window.currentLang === 'sq'
+        ? 'Gabim gjatë dërgimit. Ju lutem provoni sërish.'
+        : 'Error sending message. Please try again.');
+    } else {
+      statusEl.textContent = (window.currentLang === 'sq'
+        ? 'Faleminderit! Do ju kontaktojmë brenda 24 orëve.'
+        : 'Thank you! We will contact you within 24 hours.');
+      form.reset();
+    }
+  });
+</script>
+
+<script>
+  document.querySelectorAll('a[href^="#"]').forEach(a => 
+    a.addEventListener('click', e => {
+      const id = a.getAttribute('href');
+      if (id.length > 1) {
+        e.preventDefault();
+        const target = document.querySelector(id);
+        const headerOffset = document.querySelector('header.header').offsetHeight;
+        const elementPosition = target.getBoundingClientRect().top + window.pageYOffset;
+        const offsetPosition = elementPosition - headerOffset + 5; // +5px for breathing room
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth"
+        });
+      }
+    })
+  );
+</script>
+
+
+</body>
+</html>
