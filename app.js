@@ -395,7 +395,7 @@ chatThread.innerHTML = data.map((m) => {
   return `
     <div class="msg ${align}">
       <div class="bubble">
-        ${m.content || ""} ${fileLink}
+        ${m.content ? m.content : ""} ${fileLink}
         ${actions}
       </div>
       <div class="timestamp">${new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
@@ -834,6 +834,46 @@ projectForm.onsubmit = async (e) => {
   closePanel();
   await loadProjects();
 };
+
+//TEXT FORMATTING
+function formatText(command, value = null) {
+  document.execCommand(command, false, value);
+}
+
+// When sending message, extract HTML
+sendMsgBtn.onclick = async () => {
+  const msgEditor = document.getElementById("msgEditor");
+  const htmlContent = msgEditor.innerHTML.trim();
+  const file = msgFileInput.files?.[0] || null;
+
+  if (!htmlContent && !file) return;
+
+  let file_url = null;
+  if (file) {
+    const ext = file.name.split(".").pop();
+    const path = `${currentUser.id}/${Date.now()}.${ext}`;
+    const { error, data } = await supabaseClient.storage.from("chat-files").upload(path, file, { upsert: true });
+    if (error) return showToast("Error uploading file", "error");
+    file_url = supabaseClient.storage.from("chat-files").getPublicUrl(path).data.publicUrl;
+  }
+
+  const { error } = await supabaseClient.from("messages").insert({
+    sender_id: currentUser.id,
+    sender_email: currentUser.email,
+    receiver_id: selectedReceiverId,
+    receiver_email: selectedReceiverName,
+    content: htmlContent, // 🔥 Save HTML
+    file_url
+  });
+
+  if (error) return showToast(error.message, "error");
+
+  msgEditor.innerHTML = "";
+  msgFileInput.value = "";
+  loadChatThread(selectedReceiverId);
+  showToast("✅ Message sent", "success");
+};
+
 
 // === Init ===
 init();
