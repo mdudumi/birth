@@ -46,7 +46,8 @@ async function init() {
     isAdmin = true;
   }
 
-  if (!isAdmin) addBtn.style.display = "none";
+// Show Add button by default, but control label dynamically
+addBtn.style.display = "block";
 
   await loadFreelancers();
   await loadFreelancerOptions();
@@ -71,16 +72,20 @@ function switchTab(tab) {
   if (tab === "projects") {
     contentTitle.textContent = "💼 Projects";
     addBtn.textContent = "+ Add Project";
+    addBtn.style.display = "block"; // ✅ show to everyone
     loadProjects();
   } else if (tab === "freelancers") {
     contentTitle.textContent = "👥 Freelancers";
     addBtn.textContent = isAdmin ? "+ Add Freelancer" : "";
+    addBtn.style.display = isAdmin ? "block" : "none"; // ✅ only admin
   } else if (tab === "inbox") {
     contentTitle.textContent = "📥 Inbox";
     addBtn.textContent = "";
+    addBtn.style.display = "none"; // ✅ no add button in inbox
     refreshInbox();
   }
 }
+
 navFreelancers.onclick = () => switchTab("freelancers");
 navProjects.onclick = () => switchTab("projects");
 navInbox.onclick = () => switchTab("inbox");
