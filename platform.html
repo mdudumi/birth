@@ -210,7 +210,19 @@
         <h3>Chat with <span id="msgReceiverName"></span></h3>
         <div id="chatThread" class="chat-thread"></div>
         <div class="chat-reply">
-          <textarea id="msgContent" placeholder="Type your message…" rows="2"></textarea>
+
+<div class="toolbar">
+  <button onclick="formatText('bold')"><b>B</b></button>
+  <button onclick="formatText('italic')"><i>I</i></button>
+  <button onclick="formatText('underline')"><u>U</u></button>
+  <button onclick="formatText('insertUnorderedList')">• List</button>
+  <button onclick="formatText('insertOrderedList')">1. List</button>
+  <button onclick="formatText('foreColor','red')">A🔴</button>
+  <button onclick="formatText('foreColor','blue')">A🔵</button>
+  <button onclick="formatText('fontSize','5')">A+</button>
+</div>
+<div id="msgEditor" class="rich-editor" contenteditable="true" placeholder="Type your message..."></div>
+
           <div class="chat-actions">
             <label class="btn small" title="Attach file">
               📎
